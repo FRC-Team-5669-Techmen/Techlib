@@ -40,16 +40,17 @@ public class MecanumDriveSubsystem extends Subsystem
    * {@link startNetworkTablesControl} was previously called, this method will
    * turn network tables control back off.
    *
-   * @param ySpeed    The robot's speed along the Y axis [-1.0..1.0]. Right is 
+   * @param ySpeed    The robot's speed along the Y axis [-1.0..1.0]. Forward is 
    *                  positive.
-   * @param xSpeed    The robot's speed along the X axis [-1.0..1.0]. Forward is
+   * @param xSpeed    The robot's speed along the X axis [-1.0..1.0]. Right is
    *                  positive.
    * @param zRotation The robot's rotation rate around the Z axis [-1.0..1.0]. 
    *                  Clockwise is positive.
    */
   public void driveCartesian(double ySpeed, double xSpeed, double zRotation) {
     stopNetworkTablesControl();
-    drive.driveCartesian(ySpeed, xSpeed, zRotation);
+    // WPILib makes the X axis forward / backward for some reason.
+    drive.driveCartesian(xSpeed, ySpeed, zRotation);
     networkData.updateTable();
   }
 
