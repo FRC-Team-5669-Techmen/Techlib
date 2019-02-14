@@ -2,6 +2,7 @@ package edu.boscotech.techlib.subsystems;
 
 import edu.boscotech.techlib.commands.ManualMecanumDrive;
 import edu.boscotech.techlib.commands.TestMecanumDrive;
+import edu.boscotech.techlib.config.Config;
 import edu.boscotech.techlib.util.DefaultCommandCreator;
 import edu.boscotech.techlib.util.TalonSRXAdapter;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -16,13 +17,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilderImpl;
  */
 public class MecanumDriveSubsystem extends Subsystem 
   implements DefaultCommandCreator {
+  private static Config cfg = Config.getInstance();
   private SendableBuilderImpl networkData = new SendableBuilderImpl();
   private boolean networkTablesControlOn = false;
   MecanumDrive drive = new MecanumDrive(
-    new TalonSRXAdapter(1),
-    new TalonSRXAdapter(2),
-    new TalonSRXAdapter(3),
-    new TalonSRXAdapter(4)
+    new TalonSRXAdapter(cfg.getInt("ports", "mecanum", "frontLeft")),
+    new TalonSRXAdapter(cfg.getInt("ports", "mecanum", "rearLeft")),
+    new TalonSRXAdapter(cfg.getInt("ports", "mecanum", "frontRight")),
+    new TalonSRXAdapter(cfg.getInt("ports", "mecanum", "rearRight"))
   );
 
   public MecanumDriveSubsystem() {
