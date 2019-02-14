@@ -21,10 +21,10 @@ public class MecanumDriveSubsystem extends Subsystem
   private SendableBuilderImpl networkData = new SendableBuilderImpl();
   private boolean networkTablesControlOn = false;
   MecanumDrive drive = new MecanumDrive(
-    new TalonSRXAdapter(cfg.getInt("ports", "mecanum", "frontLeft")),
-    new TalonSRXAdapter(cfg.getInt("ports", "mecanum", "rearLeft")),
-    new TalonSRXAdapter(cfg.getInt("ports", "mecanum", "frontRight")),
-    new TalonSRXAdapter(cfg.getInt("ports", "mecanum", "rearRight"))
+    new TalonSRXAdapter(cfg.getInt("subsystems", "mecanum", "frontLeft")),
+    new TalonSRXAdapter(cfg.getInt("subsystems", "mecanum", "rearLeft")),
+    new TalonSRXAdapter(cfg.getInt("subsystems", "mecanum", "frontRight")),
+    new TalonSRXAdapter(cfg.getInt("subsystems", "mecanum", "rearRight"))
   );
 
   public MecanumDriveSubsystem() {
