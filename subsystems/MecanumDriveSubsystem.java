@@ -3,8 +3,8 @@ package edu.boscotech.techlib.subsystems;
 import edu.boscotech.techlib.commands.ManualMecanumDrive;
 import edu.boscotech.techlib.commands.TestMecanumDrive;
 import edu.boscotech.techlib.util.DefaultCommandCreator;
+import edu.boscotech.techlib.util.TalonSRXAdapter;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
@@ -19,10 +19,10 @@ public class MecanumDriveSubsystem extends Subsystem
   private SendableBuilderImpl networkData = new SendableBuilderImpl();
   private boolean networkTablesControlOn = false;
   MecanumDrive drive = new MecanumDrive(
-    new Victor(1),
-    new Victor(2),
-    new Victor(3),
-    new Victor(4)
+    new TalonSRXAdapter(1),
+    new TalonSRXAdapter(2),
+    new TalonSRXAdapter(3),
+    new TalonSRXAdapter(4)
   );
 
   public MecanumDriveSubsystem() {
