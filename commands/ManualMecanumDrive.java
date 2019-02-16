@@ -1,7 +1,6 @@
 package edu.boscotech.techlib.commands;
 
 import edu.boscotech.techlib.config.AnalogControl;
-import edu.boscotech.techlib.config.Controls;
 import edu.boscotech.techlib.subsystems.MecanumDriveSubsystem;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -14,12 +13,11 @@ public class ManualMecanumDrive extends Command {
     requires(drive);
     m_drive = drive;
 
-    Controls con = Controls.getInstance();
-    m_xControl = con.getAnalogControl("mecanum", "x");
-    m_yControl = con.getAnalogControl("mecanum", "y");
-    m_rControl = con.getAnalogControl("mecanum", "r");
-    m_xyThrottle = con.getAnalogControl("mecanum", "xyThrottle");
-    m_rThrottle = con.getAnalogControl("mecanum", "rThrottle");
+    m_xControl = drive.getAnalogControl("x");
+    m_xControl = drive.getAnalogControl("y");
+    m_xControl = drive.getAnalogControl("r");
+    m_xControl = drive.getAnalogControl("xyThrottle");
+    m_xControl = drive.getAnalogControl("rThrottle");
   }
 
   @Override

@@ -2,36 +2,30 @@ package edu.boscotech.techlib.subsystems;
 
 import edu.boscotech.techlib.commands.ManualMecanumDrive;
 import edu.boscotech.techlib.commands.TestMecanumDrive;
-import edu.boscotech.techlib.config.Config;
-import edu.boscotech.techlib.util.DefaultCommandCreator;
 import edu.boscotech.techlib.util.TalonSRXAdapter;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilderImpl;
 
 /**
  * An adapter class for {@link MecanumDrive} that also sets up its motor
  * controllers.
  */
-public class MecanumDriveSubsystem extends Subsystem 
-  implements DefaultCommandCreator {
-  private static Config cfg = Config.getInstance();
-  private SendableBuilderImpl networkData = new SendableBuilderImpl();
-  private boolean networkTablesControlOn = false;
-  MecanumDrive drive = new MecanumDrive(
-    new TalonSRXAdapter(cfg.getInt("subsystems", "mecanum", "frontLeft")),
-    new TalonSRXAdapter(cfg.getInt("subsystems", "mecanum", "rearLeft")),
-    new TalonSRXAdapter(cfg.getInt("subsystems", "mecanum", "frontRight")),
-    new TalonSRXAdapter(cfg.getInt("subsystems", "mecanum", "rearRight"))
-  );
+public class MecanumDriveSubsystem extends BetterSubsystem {
+  MecanumDrive m_drive;
 
   public MecanumDriveSubsystem() {
-    networkData.setTable(NetworkTableInstance.getDefault()
-      .getTable("Subsystems").getSubTable("MecanumDrive"));
-    drive.initSendable(networkData);
-    networkData.updateTable();
+    super("Mecanum Drive", "mecanum", "MecanumDrive");
+  }
+
+  @Override
+  protected void setup() {
+    m_drive = new MecanumDrive(
+      new TalonSRXAdapter(getCfgInt("frontLeft")),
+      new TalonSRXAdapter(getCfgInt("rearLeft")),
+      new TalonSRXAdapter(getCfgInt("frontRight")),
+      new TalonSRXAdapter(getCfgInt("rearRight"))
+    );
+    m_drive.initSendable(getNetworkData());
   }
 
   /**
@@ -52,8 +46,7 @@ public class MecanumDriveSubsystem extends Subsystem
   public void driveCartesian(double ySpeed, double xSpeed, double zRotation) {
     stopNetworkTablesControl();
     // WPILib makes the X axis forward / backward for some reason.
-    drive.driveCartesian(xSpeed, ySpeed, zRotation);
-    networkData.updateTable();
+    m_drive.driveCartesian(xSpeed, ySpeed, zRotation);
   }
 
   /**
@@ -73,40 +66,13 @@ public class MecanumDriveSubsystem extends Subsystem
    */
   public void drivePolar(double magnitude, double angle, double zRotation) {
     stopNetworkTablesControl();
-    drive.drivePolar(magnitude, angle, zRotation);
-    networkData.updateTable();
-  }
-
-  /**
-   * Allows this subsystem to be driven manually via the NetworkTables api,
-   * which can be accessed from most dashboard systems (usually Shuffleboard).
-   * If control is already enabled, this method will exit early, making it safe
-   * to call frequently.
-   */
-  public void startNetworkTablesControl() {
-    if (networkTablesControlOn) return;
-    drive.driveCartesian(0.0, 0.0, 0.0);
-    networkData.startListeners();
-    networkData.updateTable();
-    networkTablesControlOn = true;
-  }
-
-  /**
-   * Stops this subsystem from being driven manually via the NetworkTables api,
-   * which is accessed by most dashboard systems (usually Shuffleboard). If
-   * control is already disabled, this method will exit early, making it safe
-   * to call frequently.
-   */
-  public void stopNetworkTablesControl() {
-    if (!networkTablesControlOn) return;
-    drive.driveCartesian(0.0, 0.0, 0.0);
-    networkData.stopListeners();
-    networkData.updateTable();
-    networkTablesControlOn = false;
+    m_drive.drivePolar(magnitude, angle, zRotation);
   }
 
   @Override
-  public void initDefaultCommand() { }
+  protected void enterSafeState() {
+    m_drive.driveCartesian(0.0, 0.0, 0.0);
+  }
 
   @Override
   public Command createDefaultTeleopCommand() {
