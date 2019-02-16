@@ -1,6 +1,6 @@
 package edu.boscotech.techlib.subsystems;
 
-import edu.boscotech.techlib.commands.TestPneumaticRaiser;
+import edu.boscotech.techlib.commands.GenericTestCommand;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
@@ -81,6 +81,6 @@ public class PneumaticRaiserSubsystem extends BetterSubsystem {
 
   @Override
   public Command createDefaultTestCommand() {
-    return new TestPneumaticRaiser(this);
+    return new GenericTestCommand(this);
   }
 }

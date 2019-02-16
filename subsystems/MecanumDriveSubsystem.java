@@ -1,7 +1,7 @@
 package edu.boscotech.techlib.subsystems;
 
+import edu.boscotech.techlib.commands.GenericTestCommand;
 import edu.boscotech.techlib.commands.ManualMecanumDrive;
-import edu.boscotech.techlib.commands.TestMecanumDrive;
 import edu.boscotech.techlib.util.TalonSRXAdapter;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
@@ -81,6 +81,6 @@ public class MecanumDriveSubsystem extends BetterSubsystem {
 
   @Override
   public Command createDefaultTestCommand() {
-    return new TestMecanumDrive(this);
+    return new GenericTestCommand(this);
   }
 }

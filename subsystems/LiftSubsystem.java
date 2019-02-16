@@ -3,7 +3,7 @@ package edu.boscotech.techlib.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.boscotech.techlib.commands.TestLift;
+import edu.boscotech.techlib.commands.GenericTestCommand;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class LiftSubsystem extends BetterSubsystem {
@@ -68,6 +68,6 @@ public class LiftSubsystem extends BetterSubsystem {
 
   @Override
   public Command createDefaultTestCommand() {
-    return new TestLift(this);
+    return new GenericTestCommand(this);
   }
 }
