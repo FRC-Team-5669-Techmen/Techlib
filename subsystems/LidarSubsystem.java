@@ -1,15 +1,20 @@
 package edu.boscotech.techlib.subsystems;
 
 import edu.boscotech.techlib.components.LidarLite3;
-import edu.boscotech.techlib.util.DefaultCommandCreator;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
 
-public class LidarSubsystem extends Subsystem implements DefaultCommandCreator {
+public class LidarSubsystem extends BetterSubsystem {
   private LidarLite3 sensor = new LidarLite3();
 
   public LidarSubsystem() {
-    super();
+    super("Lidar", "lidar", "Lidar");
+  }
+
+  public LidarSubsystem(String hrName, String cfgName) {
+    super(hrName, cfgName, "Lidar");
+  }
+
+  @Override
+  protected void setup() {
     sensor.useFreeRunningMode();
   }
 
@@ -19,21 +24,5 @@ public class LidarSubsystem extends Subsystem implements DefaultCommandCreator {
    */
   public int getDistance() {
     return sensor.getLastMeasurement();
-  }
-
-  @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
-  }
-
-  @Override
-  public Command createDefaultTeleopCommand() {
-    return null;
-  }
-
-  @Override
-  public Command createDefaultTestCommand() {
-    return null;
   }
 }
