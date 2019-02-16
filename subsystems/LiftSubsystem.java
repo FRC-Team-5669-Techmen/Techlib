@@ -3,6 +3,7 @@ package edu.boscotech.techlib.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.boscotech.techlib.commands.TestLift;
 import edu.boscotech.techlib.config.Config;
 import edu.boscotech.techlib.util.DefaultCommandCreator;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -102,6 +103,6 @@ public class LiftSubsystem extends Subsystem implements DefaultCommandCreator {
 
   @Override
   public Command createDefaultTestCommand() {
-    return null;
+    return new TestLift(this);
   }
 }
