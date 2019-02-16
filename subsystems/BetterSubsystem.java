@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilderImpl;
 
-public class BetterSubsystem extends Subsystem 
+public abstract class BetterSubsystem extends Subsystem 
   implements DefaultCommandCreator {
   private static Map<String, Integer> s_numInstances = new HashMap<>();
   private static List<BetterSubsystem> s_instances = new ArrayList<>();
@@ -23,7 +23,7 @@ public class BetterSubsystem extends Subsystem
   private boolean m_networkTablesControlOn = false;
   private String m_cfgName;
 
-  public BetterSubsystem(String hrName, String cfgName, Runnable safeState) {
+  public BetterSubsystem(String hrName, String cfgName, String ntType) {
     m_cfgName = cfgName;
     s_instances.add(this);
 
@@ -32,10 +32,18 @@ public class BetterSubsystem extends Subsystem
     if (instances > 1) {
       hrName += instances;
     }
+    s_numInstances.put(cfgName, instances);
+
     m_networkData.setTable(NetworkTableInstance.getDefault()
       .getTable("Subsystems").getSubTable(hrName));
-    s_numInstances.put(cfgName, instances);
+    m_networkData.setSmartDashboardType(ntType);
+    m_networkData.setActuator(true);
+    m_networkData.setSafeState(this::enterSafeState);
+
+    setup();
   }
+
+  protected abstract void setup();
 
   public static void updateAllSubsystemNetworkTables() {
     for (BetterSubsystem subsystem : s_instances) {
@@ -83,6 +91,10 @@ public class BetterSubsystem extends Subsystem
     return Config.getInstance().getDouble(extendPath(path));
   }
 
+  protected SendableBuilderImpl getNetworkData() {
+    return m_networkData;
+  }
+
   public AnalogControl getAnalogControl(String name) {
     return Controls.getInstance().getAnalogControl(m_cfgName, "controls", name);
   }
@@ -91,6 +103,8 @@ public class BetterSubsystem extends Subsystem
     return Controls.getInstance()
       .getDigitalControl(m_cfgName, "controls", name);
   }
+
+  protected void enterSafeState() { }
 
   @Override
   protected void initDefaultCommand() { }
