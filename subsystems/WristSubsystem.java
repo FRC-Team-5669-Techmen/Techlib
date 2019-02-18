@@ -70,6 +70,10 @@ public class WristSubsystem extends BetterSubsystem {
     m_motor.neutralOutput();
   }
 
+  public void setManualSpeed(double speed) {
+    m_motor.set(ControlMode.PercentOutput, speed);
+  }
+
   @Override
   protected void enterSafeState() {
     goNeutral();
