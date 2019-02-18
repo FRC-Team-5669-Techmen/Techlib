@@ -26,7 +26,7 @@ public abstract class Robot extends TimedRobot {
    * automatically interrupted once the teleop period ends.
    * @param commands The commands to be added.
    */
-  protected void useCommands(Command... commands) {
+  protected final void useCommands(Command... commands) {
     for (Command command : commands) {
       if (command == null) continue;
       command.start();
@@ -39,7 +39,7 @@ public abstract class Robot extends TimedRobot {
    * command for that mode will be automatically started as well.
    * @param subsystem
    */
-  protected void useDefaultCommandsFrom(DefaultCommandCreator... subsystems) {
+  protected final void useDefaultCommandsFrom(DefaultCommandCreator... subsystems) {
     for (DefaultCommandCreator subsystem : subsystems) {
       m_defaultSubsystems.add(subsystem);
     }
@@ -50,7 +50,7 @@ public abstract class Robot extends TimedRobot {
    * used for any initialization code.
    */
   @Override
-  public void robotInit() {
+  public final void robotInit() {
   }
 
   /**
@@ -62,7 +62,7 @@ public abstract class Robot extends TimedRobot {
    * LiveWindow and SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {
+  public final void robotPeriodic() {
   }
 
   /**
@@ -71,7 +71,7 @@ public abstract class Robot extends TimedRobot {
    * the robot is disabled.
    */
   @Override
-  public void disabledInit() {
+  public final void disabledInit() {
     for (Command command : m_currentCommands) {
       command.cancel();
     }
@@ -79,7 +79,7 @@ public abstract class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledPeriodic() {
+  public final void disabledPeriodic() {
     Scheduler.getInstance().run();
   }
 
@@ -95,40 +95,46 @@ public abstract class Robot extends TimedRobot {
    * to the switch structure below with additional strings & commands.
    */
   @Override
-  public void autonomousInit() {
+  public final void autonomousInit() {
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",
      * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
      * = new MyAutoCommand(); break; case "Default Auto": default:
      * autonomousCommand = new ExampleCommand(); break; }
      */
+    setupAutonomous();
   }
+
+  protected void setupAutonomous() { }
 
   /**
    * This function is called periodically during autonomous.
    */
   @Override
-  public void autonomousPeriodic() {
+  public final void autonomousPeriodic() {
     Scheduler.getInstance().run();
   }
 
   @Override
-  public void teleopInit() {
+  public final void teleopInit() {
     for (DefaultCommandCreator creator : m_defaultSubsystems) {
       useCommands(creator.createDefaultTeleopCommand());
     }
+    setupTeleop();
   }
+
+  protected void setupTeleop() { }
 
   /**
    * This function is called periodically during operator control.
    */
   @Override
-  public void teleopPeriodic() {
+  public final void teleopPeriodic() {
     Scheduler.getInstance().run();
   }
 
   @Override
-  public void testInit() {
+  public final void testInit() {
     for (DefaultCommandCreator creator : m_defaultSubsystems) {
       useCommands(creator.createDefaultTestCommand());
     }
@@ -138,7 +144,7 @@ public abstract class Robot extends TimedRobot {
    * This function is called periodically during test mode.
    */
   @Override
-  public void testPeriodic() {
+  public final void testPeriodic() {
     Scheduler.getInstance().run();
   }
 }
