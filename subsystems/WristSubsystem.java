@@ -23,7 +23,17 @@ public class WristSubsystem extends BetterSubsystem {
     m_motor = new TalonSRX(getCfgInt("motor"));
     getNetworkData().addDoubleProperty("Position", 
       this::getPosition, this::setPosition);
-    // TODO: Config stuff for motion profile.
+    
+    m_motor.setSensorPhase(true); // Sensor is backwards.
+    m_motor.configMotionCruiseVelocity(getCfgInt("motionProfile", "cruiseSpeed"));
+    m_motor.configMotionAcceleration(getCfgInt("motionProfile", "acceleration"));
+    m_motor.config_kF(0, getCfgDouble("motionProfile", "f"));
+    m_motor.config_kP(0, getCfgDouble("motionProfile", "p"));
+    m_motor.config_kI(0, getCfgDouble("motionProfile", "i"));
+    m_motor.config_kD(0, getCfgDouble("motionProfile", "d"));
+    m_motor.configClearPositionOnLimitR(true, 100);
+    m_deployedPosition = 0;
+    m_retractedPosition = getCfgInt("motionProfile", "distance");
   }
 
   private boolean isAtPosition(int sensorUnits) {
