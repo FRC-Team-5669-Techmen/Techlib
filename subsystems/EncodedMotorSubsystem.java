@@ -18,6 +18,8 @@ public abstract class EncodedMotorSubsystem extends BetterSubsystem {
 
     protected final void setupMotor(int motorIndex, String cfgPath,
         boolean motorBackwards, boolean sensorBackwards) {
+        getNetworkData().addDoubleProperty("Position", 
+            this::getPosition, this::setPosition);
         m_encodedMotor = new TalonSRX(motorIndex);
         m_encodedMotor.setSensorPhase(sensorBackwards);
         m_encodedMotor.setInverted(motorBackwards);
