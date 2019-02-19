@@ -73,9 +73,11 @@ public abstract class EncodedMotorSubsystem extends BetterSubsystem {
         super.periodic();
         if (isPLimitEngaged()) {
             m_range = m_encodedMotor.getSelectedSensorPosition();
+            goNeutral();
         } else if (isNLimitEngaged()) {
             m_range -= m_encodedMotor.getSelectedSensorPosition();
             m_encodedMotor.setSelectedSensorPosition(0);
+            goNeutral();
         }
     }
 
