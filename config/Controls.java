@@ -41,7 +41,9 @@ public class Controls {
       double curve = cfg.getDouble(realpath);
       realpath[path.length] = "scale";
       double scale = cfg.getDouble(realpath);
-      analogControls.put(catPath, new AnalogControl(stick, axis, curve, scale));
+      realpath[path.length] = "offset";
+      double offset = cfg.getDouble(realpath);
+      analogControls.put(catPath, new AnalogControl(stick, axis, curve, scale, offset));
     }
 
     return analogControls.get(catPath);

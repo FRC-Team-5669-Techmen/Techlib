@@ -8,6 +8,7 @@ public abstract class SingleActionCommand<T extends Subsystem> extends Command {
   private boolean m_done = false;
 
   public SingleActionCommand(T target) {
+    requires(target);
     m_target = target;
   }
 
@@ -24,7 +25,7 @@ public abstract class SingleActionCommand<T extends Subsystem> extends Command {
   }
 
   @Override
-  protected boolean isFinished() {
+  protected final boolean isFinished() {
     return m_done;
   }
 }

@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.boscotech.techlib.commands.GenericTestCommand;
+import edu.boscotech.techlib.commands.SetLiftSpeed;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class LiftSubsystem extends BetterSubsystem {
@@ -24,6 +25,9 @@ public class LiftSubsystem extends BetterSubsystem {
     getNetworkData().addDoubleProperty("Height", this::getPosition, 
       this::goToPosition);
     m_motor = new TalonSRX(getCfgInt("motor1"));
+    m_motor.setSensorPhase(true); // Sensor is backwards.
+    m_motor.setInverted(true); // Motor is backwards.
+    m_motor.configOpenloopRamp(0.5);
     // TODO: Config stuff for motion profile.
   }
 
@@ -57,6 +61,10 @@ public class LiftSubsystem extends BetterSubsystem {
     ) < m_tolerance;
   }
 
+  public void setManualSpeed(double speed) {
+    m_motor.set(ControlMode.PercentOutput, speed);
+  }
+
   public void goNeutral() {
     m_motor.neutralOutput();
   }
@@ -64,6 +72,15 @@ public class LiftSubsystem extends BetterSubsystem {
   @Override
   protected void enterSafeState() {
     goNeutral();
+  }
+
+  @Override
+  public Command createDefaultTeleopCommand() {
+    getDigitalControl("up").whenPressed(new SetLiftSpeed(this, 0.8));
+    getDigitalControl("up").whenReleased(new SetLiftSpeed(this, 0.0));
+    getDigitalControl("down").whenPressed(new SetLiftSpeed(this, -0.8));
+    getDigitalControl("down").whenReleased(new SetLiftSpeed(this, 0.0));
+    return null;
   }
 
   @Override

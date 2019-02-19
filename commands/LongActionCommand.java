@@ -8,6 +8,7 @@ public abstract class LongActionCommand<T extends Subsystem> extends Command {
   private boolean m_done = false;
 
   public LongActionCommand(T target) {
+    requires(target);
     m_target = target;
   }
 
@@ -27,7 +28,7 @@ public abstract class LongActionCommand<T extends Subsystem> extends Command {
   }
 
   @Override
-  protected boolean isFinished() {
+  protected final boolean isFinished() {
     return m_done;
   }
 }

@@ -50,7 +50,7 @@ public class Config {
     }
     message += "\nThere was an error retrieving the path:\n";
     message += path[0];
-    for (int j = 1; j < pos + 1; j++) {
+    for (int j = 1; j < Math.min(path.length, pos + 1); j++) {
       message += "." + path[j];
     }
     return new NoSuchElementException(message);

@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.Joystick;
 public class AnalogControl {
   private Joystick m_joystick;
   private int m_axisIndex;
-  private double m_scale, m_curve;
+  private double m_scale, m_curve, m_offset;
 
   /**
    * Constructs an AnalogControl.
@@ -24,11 +24,12 @@ public class AnalogControl {
    * @param scale A multiplier applied to the value after being curved.
    */
   public AnalogControl(Joystick joystick, int axisIndex, double curve, 
-    double scale) {
+    double scale, double offset) {
     m_joystick = joystick;
     m_axisIndex = axisIndex;
     m_curve = curve;
     m_scale = scale;
+    m_offset = offset;
   }
 
   public double getValue() {
@@ -36,6 +37,8 @@ public class AnalogControl {
     // Abs and multiply by sign so that we get the correct sign, even if the
     // power is e.g. 2, which would make everything positive.
     value = Math.abs(Math.pow(value, m_curve)) * (value > 0.0 ? 1 : -1);
-    return m_scale * value;
+    value *= m_scale;
+    value += m_offset;
+    return value;
   }
 }

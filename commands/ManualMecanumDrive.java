@@ -14,10 +14,10 @@ public class ManualMecanumDrive extends Command {
     m_drive = drive;
 
     m_xControl = drive.getAnalogControl("x");
-    m_xControl = drive.getAnalogControl("y");
-    m_xControl = drive.getAnalogControl("r");
-    m_xControl = drive.getAnalogControl("xyThrottle");
-    m_xControl = drive.getAnalogControl("rThrottle");
+    m_yControl = drive.getAnalogControl("y");
+    m_rControl = drive.getAnalogControl("r");
+    m_xyThrottle = drive.getAnalogControl("xyThrottle");
+    m_rThrottle = drive.getAnalogControl("rThrottle");
   }
 
   @Override
