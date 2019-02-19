@@ -8,6 +8,7 @@ public class DriveEncodedMotor extends Command {
     private double m_speed;
 
     public DriveEncodedMotor(EncodedMotorSubsystem motor, double speed) {
+        requires(motor);
         m_motor = motor;
         m_speed = speed;
     }

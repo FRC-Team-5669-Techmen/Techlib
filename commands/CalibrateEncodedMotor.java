@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class CalibrateEncodedMotor extends CommandGroup {
     public CalibrateEncodedMotor(EncodedMotorSubsystem motor) {
+        requires(motor);
+
         addSequential(new Command(){
             @Override
             public synchronized void start() {

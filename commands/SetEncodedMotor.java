@@ -9,6 +9,7 @@ public class SetEncodedMotor extends Command {
     double m_target;
 
     public SetEncodedMotor(EncodedMotorSubsystem motor, double target) {
+        requires(motor);
         m_motor = motor;
         m_target = target;
         m_forward = m_target > m_motor.getPosition();
