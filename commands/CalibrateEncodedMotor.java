@@ -10,7 +10,7 @@ public class CalibrateEncodedMotor extends CommandGroup {
 
         addSequential(new Command(){
             @Override
-            public synchronized void start() {
+            protected void execute() {
                 motor.startNCalibration();
             }
         
@@ -22,7 +22,7 @@ public class CalibrateEncodedMotor extends CommandGroup {
 
         addSequential(new Command(){
             @Override
-            public synchronized void start() {
+            protected void execute() {
                 motor.startPCalibration();
             }
         
@@ -34,7 +34,7 @@ public class CalibrateEncodedMotor extends CommandGroup {
 
         addSequential(new Command(){
             @Override
-            public synchronized void start() {
+            protected void execute() {
                 motor.printRange();
             }
         
