@@ -11,24 +11,24 @@ public class CalibrateEncodedMotor extends CommandGroup {
         addSequential(new Command(){
             @Override
             protected void execute() {
-                motor.startNCalibration();
-            }
-        
-            @Override
-            protected boolean isFinished() {
-                return motor.isNLimitEngaged();
-            }
-        });
-
-        addSequential(new Command(){
-            @Override
-            protected void execute() {
                 motor.startPCalibration();
             }
         
             @Override
             protected boolean isFinished() {
                 return motor.isPLimitEngaged();
+            }
+        });
+
+        addSequential(new Command(){
+            @Override
+            protected void execute() {
+                motor.startNCalibration();
+            }
+        
+            @Override
+            protected boolean isFinished() {
+                return motor.isNLimitEngaged();
             }
         });
 

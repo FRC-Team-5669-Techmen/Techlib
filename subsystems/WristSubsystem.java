@@ -16,11 +16,11 @@ public class WristSubsystem extends EncodedMotorSubsystem {
 
   @Override
   protected void setup() {
-    setupMotor(getCfgInt("motor"), "motionProfile", false, true);
+    setupMotor(getCfgInt("motor"), "motionProfile", true, true);
   }
 
   public void deploy() {
-    setPosition(0.0);
+    setPosition(1.0);
   }
 
   public boolean isDeployed() {
@@ -28,7 +28,7 @@ public class WristSubsystem extends EncodedMotorSubsystem {
   }
 
   public void retract() {
-    setPosition(1.0);
+    setPosition(0.0);
   }
 
   public boolean isRetracted() {
@@ -37,8 +37,8 @@ public class WristSubsystem extends EncodedMotorSubsystem {
 
   @Override
   public Command createDefaultTeleopCommand() {
-    getDigitalControl("deploy").whenPressed(new SetEncodedMotor(this, 0.0));
-    getDigitalControl("retract").whenPressed(new SetEncodedMotor(this, 1.0));
+    getDigitalControl("deploy").whenPressed(new SetEncodedMotor(this, 1.0));
+    getDigitalControl("retract").whenPressed(new SetEncodedMotor(this, 0.0));
     getDigitalControl("calibrate").whenPressed(new CalibrateEncodedMotor(this));
     return null;
   }
