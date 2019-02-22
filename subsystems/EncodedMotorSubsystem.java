@@ -10,7 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
  */
 public abstract class EncodedMotorSubsystem extends BetterSubsystem {
     private TalonSRX m_encodedMotor;
-    private int m_range;
+    private int m_range, m_countsPerUnit;
 
     public EncodedMotorSubsystem(String hrName, String cfgName, String ntType) {
         super(hrName, cfgName, ntType);
@@ -25,9 +25,10 @@ public abstract class EncodedMotorSubsystem extends BetterSubsystem {
         m_encodedMotor.setInverted(motorBackwards);
         m_encodedMotor.configClearPositionOnLimitR(true, 100);
         m_range = getCfgInt(cfgPath, "range");
+        m_countsPerUnit = getCfgInt(cfgPath, "countsPerUnit");
 
         m_encodedMotor.configMotionCruiseVelocity(getCfgInt(cfgPath, "cruiseSpeed"));
-        m_encodedMotor.configMotionAcceleration(getCfgInt(cfgPath, "accelerateion"));
+        m_encodedMotor.configMotionAcceleration(getCfgInt(cfgPath, "acceleration"));
         m_encodedMotor.config_kF(0, getCfgDouble(cfgPath, "f"));
         m_encodedMotor.config_kP(0, getCfgDouble(cfgPath, "p"));
         m_encodedMotor.config_kI(0, getCfgDouble(cfgPath, "i"));
@@ -35,11 +36,11 @@ public abstract class EncodedMotorSubsystem extends BetterSubsystem {
     }
 
     public double getPosition() {
-        return m_encodedMotor.getSelectedSensorPosition() / ((double) m_range);
+        return m_encodedMotor.getSelectedSensorPosition() / ((double) m_countsPerUnit);
     }
 
-    public void setPosition(double position) {
-        m_encodedMotor.set(ControlMode.MotionMagic, position * m_range);
+    public void setPosition(double units) {
+        m_encodedMotor.set(ControlMode.MotionMagic, units * m_countsPerUnit);
     }
 
     public void setManualSpeed(double speed) {
@@ -75,11 +76,9 @@ public abstract class EncodedMotorSubsystem extends BetterSubsystem {
         super.periodic();
         if (isPLimitEngaged()) {
             m_range = m_encodedMotor.getSelectedSensorPosition();
-            goNeutral();
         } else if (isNLimitEngaged()) {
             m_range -= m_encodedMotor.getSelectedSensorPosition();
             m_encodedMotor.setSelectedSensorPosition(0);
-            goNeutral();
         }
     }
 
