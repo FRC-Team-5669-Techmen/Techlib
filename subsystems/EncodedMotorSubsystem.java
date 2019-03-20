@@ -18,8 +18,6 @@ public abstract class EncodedMotorSubsystem extends BetterSubsystem {
 
     protected final void setupMotor(int motorIndex, String cfgPath,
         boolean motorBackwards, boolean sensorBackwards) {
-        getNetworkData().addDoubleProperty("Position", 
-            this::getPosition, this::setPosition);
         m_encodedMotor = new TalonSRX(motorIndex);
         m_encodedMotor.setSensorPhase(sensorBackwards);
         m_encodedMotor.setInverted(motorBackwards);
@@ -33,6 +31,26 @@ public abstract class EncodedMotorSubsystem extends BetterSubsystem {
         m_encodedMotor.config_kP(0, getCfgDouble(cfgPath, "p"));
         m_encodedMotor.config_kI(0, getCfgDouble(cfgPath, "i"));
         m_encodedMotor.config_kD(0, getCfgDouble(cfgPath, "d"));
+
+        getNetworkData().addDoubleProperty("position", this::getPosition, 
+            this::setPosition);
+        getNetworkData().addDoubleProperty("speed", this::getSpeed, 
+            this::setManualSpeed);
+        getNetworkData().addBooleanProperty("minCalibrate", 
+            () -> getSpeed() == -0.2, 
+            (boolean b) -> { if(b) startNCalibration(); });
+        getNetworkData().addBooleanProperty("maxCalibrate", 
+            () -> getSpeed() == 0.2, 
+            (boolean b) -> { if(b) startPCalibration(); });
+        getNetworkData().addDoubleProperty("minPos", () -> 0.0, 
+            (double d) -> { });
+        getNetworkData().addDoubleProperty("maxPos", 
+            () -> this.m_range / (double) this.m_countsPerUnit, 
+            (double d) -> { });
+        getNetworkData().addBooleanProperty("minLimit", this::isNLimitEngaged, 
+            (boolean b) -> { });
+        getNetworkData().addBooleanProperty("maxLimit", this::isPLimitEngaged, 
+            (boolean b) -> { });
     }
 
     public double getPosition() {
@@ -41,6 +59,10 @@ public abstract class EncodedMotorSubsystem extends BetterSubsystem {
 
     public void setPosition(double units) {
         m_encodedMotor.set(ControlMode.MotionMagic, units * m_countsPerUnit);
+    }
+
+    public double getSpeed() {
+        return m_encodedMotor.getMotorOutputPercent();
     }
 
     public void setManualSpeed(double speed) {
