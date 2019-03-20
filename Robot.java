@@ -103,6 +103,8 @@ public abstract class Robot extends TimedRobot {
      * autonomousCommand = new ExampleCommand(); break; }
      */
     setupAutonomous();
+    // TODO: Disable this. Temporary hack for 2019 season.
+    teleopInit();
   }
 
   protected void setupAutonomous() { }
@@ -136,9 +138,12 @@ public abstract class Robot extends TimedRobot {
   @Override
   public final void testInit() {
     for (DefaultCommandCreator creator : m_defaultSubsystems) {
-      useCommands(creator.createDefaultTestCommand());
+      //useCommands(creator.createDefaultTestCommand());
     }
+    setupTest();
   }
+
+  protected void setupTest() { }
 
   /**
    * This function is called periodically during test mode.

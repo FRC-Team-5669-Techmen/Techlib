@@ -37,9 +37,6 @@ public class WristSubsystem extends EncodedMotorSubsystem {
 
   @Override
   public Command createDefaultTeleopCommand() {
-    getDigitalControl("deploy").whenPressed(new SetEncodedMotor(this, 1.0));
-    getDigitalControl("retract").whenPressed(new SetEncodedMotor(this, 0.0));
-    getDigitalControl("calibrate").whenPressed(new CalibrateEncodedMotor(this));
     return null;
   }
 

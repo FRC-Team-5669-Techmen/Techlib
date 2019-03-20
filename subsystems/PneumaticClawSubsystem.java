@@ -19,7 +19,7 @@ public class PneumaticClawSubsystem extends BetterSubsystem {
     @Override
     protected void setup() {
         m_clawActuator = new DoubleSolenoid(
-            getCfgInt("openClaw"), getCfgInt("closeClaw")
+            getCfgInt("open"), getCfgInt("close")
         );
     }
 
@@ -46,7 +46,6 @@ public class PneumaticClawSubsystem extends BetterSubsystem {
 
     @Override
     public Command createDefaultTeleopCommand() {
-        getDigitalControl("toggle").whenPressed(new ToggleClaw(this));
         return null;
     }
 }

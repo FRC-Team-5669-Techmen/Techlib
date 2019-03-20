@@ -36,10 +36,6 @@ public class LiftSubsystem extends EncodedMotorSubsystem {
 
   @Override
   public Command createDefaultTeleopCommand() {
-    getDigitalControl("up").whenPressed(new DriveEncodedMotor(this, 0.8));
-    getDigitalControl("up").whenReleased(new DriveEncodedMotor(this, 0.0));
-    getDigitalControl("down").whenPressed(new DriveEncodedMotor(this, -0.8));
-    getDigitalControl("down").whenReleased(new DriveEncodedMotor(this, 0.0));
     return null;
   }
 
