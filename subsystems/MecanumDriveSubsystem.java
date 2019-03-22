@@ -1,8 +1,10 @@
 package edu.boscotech.techlib.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.boscotech.techlib.commands.GenericTestCommand;
 import edu.boscotech.techlib.commands.ManualMecanumDrive;
-import edu.boscotech.techlib.util.TalonSRXAdapter;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 
@@ -20,10 +22,10 @@ public class MecanumDriveSubsystem extends BetterSubsystem {
   @Override
   protected void setup() {
     m_drive = new MecanumDrive(
-      new TalonSRXAdapter(getCfgInt("frontLeft")),
-      new TalonSRXAdapter(getCfgInt("rearLeft")),
-      new TalonSRXAdapter(getCfgInt("frontRight")),
-      new TalonSRXAdapter(getCfgInt("rearRight"))
+      new CANSparkMax(getCfgInt("frontLeft"), MotorType.kBrushless),
+      new CANSparkMax(getCfgInt("rearLeft"), MotorType.kBrushless),
+      new CANSparkMax(getCfgInt("frontRight"), MotorType.kBrushless),
+      new CANSparkMax(getCfgInt("rearRight"), MotorType.kBrushless)
     );
     m_drive.initSendable(getNetworkData());
   }

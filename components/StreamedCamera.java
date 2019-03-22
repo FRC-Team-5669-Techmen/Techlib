@@ -4,13 +4,18 @@ import edu.boscotech.techlib.config.Config;
 import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.vision.VisionPipeline;
+import edu.wpi.first.vision.VisionThread;
 
 public class StreamedCamera {
   UsbCamera camera;
   String name;
+  VisionPipeline m_pipeline = null;
+  VisionThread m_visionThread;
 
-  public StreamedCamera(String name) {
+  public StreamedCamera(String name, VisionPipeline pipeline) {
     this.name = name;
+    m_pipeline = pipeline;
   }
 
   public void startCameraStream() {
@@ -36,5 +41,9 @@ public class StreamedCamera {
     camera.setResolution(width, height);
     mjpegServer.getProperty("fps").set(fps);
     camera.setFPS(fps);
+
+    if (m_pipeline != null) {
+      m_visionThread = new VisionThread(camera, m_pipeline, pipeline -> { });
+    }
   }
 }

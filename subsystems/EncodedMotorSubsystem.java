@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 public abstract class EncodedMotorSubsystem extends BetterSubsystem {
     private TalonSRX m_encodedMotor;
     private int m_range, m_countsPerUnit;
+    private double m_targetPosition;
 
     public EncodedMotorSubsystem(String hrName, String cfgName, String ntType) {
         super(hrName, cfgName, ntType);
@@ -57,7 +58,12 @@ public abstract class EncodedMotorSubsystem extends BetterSubsystem {
         return m_encodedMotor.getSelectedSensorPosition() / ((double) m_countsPerUnit);
     }
 
+    public double getTargetPosition() {
+        return m_targetPosition;
+    }
+
     public void setPosition(double units) {
+        m_targetPosition = units;
         m_encodedMotor.set(ControlMode.MotionMagic, units * m_countsPerUnit);
     }
 
