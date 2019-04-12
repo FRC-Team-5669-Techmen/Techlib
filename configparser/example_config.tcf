@@ -1,0 +1,54 @@
+hardware:
+    motor1 is TalonSRX:
+        port: 20
+        motionProfile:
+            p: 20.0
+            i: 20
+            d: 493
+            f: 4.01e-10
+    motor2 is TalonSRX:
+        port: 0x10
+        reversed: true
+        motionProfile:
+            p: 109284e109
+            i: .014e123
+            d: 124
+
+controls:
+    trigger is Button:
+        stick: 0
+        index: 1
+        mode: press
+    xAxis is Axis:
+        stick: 0
+        index: 0
+        curve: 1.5
+    yAxis is Axis:
+        stick: 0
+        index: 1
+        curve: 1.5
+        multiplier: -1
+    goFast is Button:
+        stick: 1
+        index: 1
+        mode: toggle
+
+values:
+    goFastAmount: {choose from 0.5, 1.0 using goFast}
+
+commands:
+    blowUp is BlowUpCommand:
+        condition: trigger
+        intensity: 500.0
+
+subsystems:
+    mecanumDrive is MecanumDrive:
+        hardware:
+            frontLeftWheel: motor1
+            frontRightWheel: motor2
+            backLeftWheel: motor1
+            backRightWheel: motor2
+        controls:
+            xSpeed: xAxis
+            ySpeed: yAxis
+
