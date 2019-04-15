@@ -47,6 +47,7 @@ class ConfigParser {
     }
 
     public static ConfigElement parse(String configData) {
+        configData += '\n';
         List<ConfigElement> stack = new ArrayList<>();
         ConfigElement currentObject = new ConfigElement("root", null, null);
         ConfigElement lastAddedObject = null;
