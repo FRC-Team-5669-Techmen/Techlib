@@ -30,9 +30,9 @@ public abstract class Controller {
      * controler is paused or stopped, it gets taken off this list. Once a
      * controller is resumed, it gets put back on this list.
      */
-    private static List<Controller> s_activeControllers = new ArrayList<>();
-    private List<BetterSubsystem> m_requirements = new ArrayList<>();
-    private boolean m_started = false, m_paused = false, m_done = false;
+    private static List<Controller> sActiveControllers = new ArrayList<>();
+    private List<BetterSubsystem> mRequirements = new ArrayList<>();
+    private boolean mStarted = false, mPaused = false, mDone = false;
     // This keeps track of the number of events that are causing this controller
     // to be paused. Every time a controller takes over one subsystem that this
     // controller is controlling, the pause count is increased by one. Every
@@ -40,7 +40,7 @@ public abstract class Controller {
     // this controller, the pause count is decreased by one. Once it reaches
     // zero, it means all controllers that were using any subsystems this
     // controller was using have ended, and this controller can resume.
-    private int m_pauseCount = 0; 
+    private int mPauseCount = 0; 
     // List of all controllers that this controller had to pause when it
     // started. In other words, a list of controllers that were controlling
     // subsystems that this controller needed access to. Controllers that are
@@ -49,9 +49,9 @@ public abstract class Controller {
     // had multiple subsystems this controller needed. There is one copy of the
     // reference to the paused controller for every subsystem it was using that
     // was needed by this controller. This allows accurate decrementing of the
-    // paused controllers' m_pauseCount when they get resumed by this
+    // paused controllers' mPauseCount when they get resumed by this
     // controller.
-    private List<Controller> m_pausedControllers = new ArrayList<>();
+    private List<Controller> mPausedControllers = new ArrayList<>();
 
     /**
      * Returns the preferred interrupt mode of this controller.
@@ -122,7 +122,7 @@ public abstract class Controller {
      * @param subsystem The subsystem to add as a requirement.
      */
     protected final void addRequirement(BetterSubsystem subsystem) {
-        m_requirements.add(subsystem);
+        mRequirements.add(subsystem);
     }
 
     /**
@@ -130,7 +130,7 @@ public abstract class Controller {
      * uses while it is running.
      */
     public final List<BetterSubsystem> getRequirements() {
-        return m_requirements;
+        return mRequirements;
     }
 
     /**
@@ -138,21 +138,21 @@ public abstract class Controller {
      * command has ended or has been paused.
      */
     public final boolean wasStarted() {
-        return m_started;
+        return mStarted;
     }
 
     /**
      * @return true if this controller is finished controlling its targets.
      */
     public final boolean isDone() {
-        return m_done;
+        return mDone;
     }
 
     /**
      * @return true if this controller is currently paused.
      */
     public final boolean isPaused() {
-        return m_paused;
+        return mPaused;
     }
 
     /**
@@ -163,7 +163,7 @@ public abstract class Controller {
     }
 
     public final void start() {
-        if (m_started) return;
+        if (mStarted) return;
         // Iterate over all subsystems this controller has control over.
         for (BetterSubsystem subsystem : getRequirements()) {
             // Store the old controller.
@@ -186,20 +186,20 @@ public abstract class Controller {
                 // active, it means it has not been paused by anthing else.)
                 } else {
                     currentController.pause();
-                    currentController.m_pauseCount++;
-                    m_pausedControllers.add(currentController);
+                    currentController.mPauseCount++;
+                    mPausedControllers.add(currentController);
                 }
             // If we took over an already paused controller, add one to the
             // pause count because now an extra controller is keeping it paused.
             } else if (currentController.isPaused()) {
-                currentController.m_pauseCount++;
-                m_pausedControllers.add(currentController);
+                currentController.mPauseCount++;
+                mPausedControllers.add(currentController);
             }
         }
-        s_activeControllers.add(this);
+        sActiveControllers.add(this);
         // Mark this controller as started so it cannot be started again and so
         // other methods will work.
-        m_started = true;
+        mStarted = true;
         // Allow child classes to implement custom logic.
         onStart();
     }
@@ -207,35 +207,35 @@ public abstract class Controller {
     private final void pause() {
         // If it is already paused, was never started, or already finished, then
         // this controller cannot be paused.
-        if (m_paused || !m_started || m_done) return;
-        s_activeControllers.remove(this);
-        m_paused = true;
+        if (mPaused || !mStarted || mDone) return;
+        sActiveControllers.remove(this);
+        mPaused = true;
         onPause();
     }
 
     private final void resume() {
         // If it is already unpaused, was never started, or already finished, 
         // then this controller cannot be resumed.
-        if (!m_paused || !m_started || m_done) return;
-        s_activeControllers.add(this);
-        m_paused = false;
+        if (!mPaused || !mStarted || mDone) return;
+        sActiveControllers.add(this);
+        mPaused = false;
         onResume();
     }
 
     public final void stop() {
         // If this controller was never started or already finished, then it
         // cannot be stopped.
-        if (!m_started || m_done) return;
+        if (!mStarted || mDone) return;
         // Set the current controller of every controlled subsystem to null.
         for (BetterSubsystem subsystem : getRequirements()) {
             subsystem.setCurrentController(null);
         }
         // Unpause any controllers this controller paused when it was started.
-        for (Controller pausedController : m_pausedControllers) {
-            pausedController.m_pauseCount--;
+        for (Controller pausedController : mPausedControllers) {
+            pausedController.mPauseCount--;
             // If this controller was the last controller keeping the paused 
             // controller paused, then resume the paused controller.
-            if (pausedController.m_pauseCount == 0) {
+            if (pausedController.mPauseCount == 0) {
                 // Find the subsystems that this controller took over from the
                 // paused controller, and set the previously paused controller
                 // as the subsystem's current controller.
@@ -247,10 +247,10 @@ public abstract class Controller {
                 pausedController.resume();
             }
         }
-        s_activeControllers.remove(this);
+        sActiveControllers.remove(this);
         // Mark this controller as done, so it will not be re-activated again in
         // the future.
-        m_done = true;
+        mDone = true;
         // Call the custom onEnd method so child classes can add their own end
         // behavior.
         onEnd();
@@ -270,7 +270,7 @@ public abstract class Controller {
         // change while updating everything without causing a concurrent
         // modification exception.
         List<Controller> toUpdate = new ArrayList<>();
-        for (Controller controller : s_activeControllers) {
+        for (Controller controller : sActiveControllers) {
             toUpdate.add(controller);
         }
         for (Controller controller : toUpdate) {

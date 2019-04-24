@@ -4,46 +4,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigElement {
-    private String m_name, m_type, m_value;
-    private List<ConfigElement> m_children = new ArrayList<>();
+    private String mName, mType, mValue;
+    private List<ConfigElement> mChildren = new ArrayList<>();
 
     public ConfigElement(String name, String type, String value) {
-        m_name = name;
-        m_type = type;
-        m_value = value;
+        mName = name;
+        mType = type;
+        mValue = value;
     }
 
     /**
      * @return the name
      */
     public String getName() {
-        return m_name;
+        return mName;
     }
 
     /**
      * @return the type
      */
     public String getType() {
-        return m_type;
+        return mType;
     }
 
     /**
      * @return the value
      */
     public String getValue() {
-        return m_value;
+        return mValue;
     }
 
     public void addChild(ConfigElement child) {
-        m_children.add(child);
+        mChildren.add(child);
     }
 
     public List<ConfigElement> getChildren() {
-        return m_children;
+        return mChildren;
     }
 
     public ConfigElement getChild(String name) {
-        for (ConfigElement child : m_children) {
+        for (ConfigElement child : mChildren) {
             if (child.getName() == name) {
                 return child;
             }
@@ -79,11 +79,11 @@ public class ConfigElement {
     }
 
     public String asString() {
-        return m_value;
+        return mValue;
     }
 
     public double asNumber() {
-        return Double.parseDouble(m_value);
+        return Double.parseDouble(mValue);
     }
 
     public String toString() {
@@ -95,8 +95,8 @@ public class ConfigElement {
         for (int i = 0; i < indentation; i++) {
             result += '\t';
         }
-        result += "name(" + m_name + ") type(" + m_type + ") value(" + m_value + ")\n";
-        for (ConfigElement child : m_children) {
+        result += "name(" + mName + ") type(" + mType + ") value(" + mValue + ")\n";
+        for (ConfigElement child : mChildren) {
             result += child.toStringInternal(indentation + 1);
         }
         return result;

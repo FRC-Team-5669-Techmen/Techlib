@@ -3,15 +3,15 @@ package edu.boscotech.techlib.validator;
 import edu.boscotech.techlib.configparser.ConfigElement;
 
 public class CompoundValidator implements IElementValidator {
-    private IElementValidator[] m_children;
+    private IElementValidator[] mChildren;
 
     public CompoundValidator(IElementValidator... validators) {
-        m_children = validators;
+        mChildren = validators;
     }
 
     @Override
     public boolean validate(ConfigElement element) throws ValidatorError {
-        for (IElementValidator child : m_children) {
+        for (IElementValidator child : mChildren) {
             if (!child.validate(element)) return false;
         }
         return true;

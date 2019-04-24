@@ -6,11 +6,11 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
 public abstract class Component implements Sendable {
-    private SendableBuilder m_networkData;
-    private String m_smartDashboardTypeName, m_name, m_subsystem;
+    private SendableBuilder mNetworkData;
+    private String mSmartDashboardTypeName, mName, mSubsystem;
 
     protected Component(String smartDashboardTypeName) {
-        m_smartDashboardTypeName = smartDashboardTypeName;
+        mSmartDashboardTypeName = smartDashboardTypeName;
         LiveWindow.add(this);
     }
 
@@ -45,7 +45,7 @@ public abstract class Component implements Sendable {
     protected abstract void addNetworkData(SendableBuilder builder);
 
     public final void setupWrapper(ConfigElement configTree) {
-        m_name = configTree.getStringOrDefault(
+        mName = configTree.getStringOrDefault(
             configTree.getName(), "name"
         );
         setup(configTree);
@@ -61,7 +61,7 @@ public abstract class Component implements Sendable {
 
     @Override
     public final String getName() {
-        return m_name;
+        return mName;
     }
 
     @Override
@@ -73,18 +73,18 @@ public abstract class Component implements Sendable {
 
     @Override
     public final String getSubsystem() {
-        return m_subsystem;
+        return mSubsystem;
     }
 
     @Override
     public final void setSubsystem(String subsystem) {
-        m_subsystem = subsystem;
+        mSubsystem = subsystem;
     }
 
     @Override
     public final void initSendable(SendableBuilder builder) {
-        m_networkData = builder;
-        m_networkData.setSmartDashboardType(m_smartDashboardTypeName);
-        addNetworkData(m_networkData);
+        mNetworkData = builder;
+        mNetworkData.setSmartDashboardType(mSmartDashboardTypeName);
+        addNetworkData(mNetworkData);
     }
 }

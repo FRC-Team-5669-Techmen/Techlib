@@ -10,10 +10,10 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
 public abstract class BetterSubsystem implements Sendable {
-    private SendableBuilder m_networkData;
-    private String m_smartDashboardTypeName, m_name;
-    private List<Component> m_components;
-    private Controller m_currentController;
+    private SendableBuilder mNetworkData;
+    private String mSmartDashboardTypeName, mName;
+    private List<Component> mComponents;
+    private Controller mCurrentController;
 
     /**
      * Constructor for BetterSubsystem.
@@ -21,7 +21,7 @@ public abstract class BetterSubsystem implements Sendable {
      *                               data to the smart dashboard.
      */
     protected BetterSubsystem(String smartDashboardTypeName) {
-        m_smartDashboardTypeName = smartDashboardTypeName;
+        mSmartDashboardTypeName = smartDashboardTypeName;
         LiveWindow.add(this);
     }
 
@@ -54,43 +54,43 @@ public abstract class BetterSubsystem implements Sendable {
      * Adds a component as part of this subsystem. 
      */
     protected final void addComponent(Component childComponent) {
-        childComponent.setSubsystem(m_name);
-        m_components.add(childComponent);
+        childComponent.setSubsystem(mName);
+        mComponents.add(childComponent);
     }
 
     public final void setupWrapper(ConfigElement configTree) {
-        m_name = configTree.getStringOrDefault(
+        mName = configTree.getStringOrDefault(
             configTree.getName(), "name"
         );
-        m_networkData.setSmartDashboardType(m_smartDashboardTypeName);
+        mNetworkData.setSmartDashboardType(mSmartDashboardTypeName);
         setup(configTree);
     }
 
     public final void periodicWrapper() {
-        for (Component component : m_components) {
+        for (Component component : mComponents) {
             component.periodicWrapper();
         }
         periodic();
     }
 
     protected final void setCurrentController(Controller controller) {
-        m_currentController = controller;
+        mCurrentController = controller;
     }
 
     public final Controller getCurrentController() {
-        return m_currentController;
+        return mCurrentController;
     }
 
     public final void enterSafeStateWrapper() {
         enterSafeState();
-        for (Component component : m_components) {
+        for (Component component : mComponents) {
             component.enterSafeStateWrapper();
         }
     }
 
     @Override
     public final String getName() {
-        return m_name;
+        return mName;
     }
 
     @Override
@@ -102,7 +102,7 @@ public abstract class BetterSubsystem implements Sendable {
 
     @Override
     public final String getSubsystem() {
-        return m_name;
+        return mName;
     }
 
     @Override
@@ -114,6 +114,6 @@ public abstract class BetterSubsystem implements Sendable {
 
     @Override
     public final void initSendable(SendableBuilder builder) {
-        m_networkData = builder;
+        mNetworkData = builder;
     }
 }
