@@ -1,4 +1,4 @@
-package edu.boscotech.techlib.controllers;
+package edu.boscotech.techlib.subsystems;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,24 +25,12 @@ public abstract class Controller {
         kStopOnInterrupt
     };
 
-
-    /**
-     * This is used to mimic the 'friend' system in C++. Since the constructor
-     * is private, only Controller has a copy of this class. That means that
-     * only a Controller can set the current Controller on a BetterSubsystem.
-     */
-    public class ControllerDelegate {
-        private ControllerDelegate() { }
-        public boolean check() { return true; }
-    }
-
     /**
      * Keeps track of all controllers that are currently active. Once a
      * controler is paused or stopped, it gets taken off this list. Once a
      * controller is resumed, it gets put back on this list.
      */
     private static List<Controller> s_activeControllers = new ArrayList<>();
-    private final ControllerDelegate m_DELEGATE = new ControllerDelegate();
     private List<BetterSubsystem> m_requirements = new ArrayList<>();
     private boolean m_started = false, m_paused = false, m_done = false;
     // This keeps track of the number of events that are causing this controller
@@ -181,7 +169,7 @@ public abstract class Controller {
             // Store the old controller.
             Controller currentController = subsystem.getCurrentController();
             // Set *this* as the new controller of the subsystem.
-            subsystem.setCurrentController(m_DELEGATE, this);
+            subsystem.setCurrentController(this);
             // If the 'old controller' was null, it means there was nothing
             // controlling that subsystem so we can continue to the next
             // subsystem without doing anything.
@@ -240,7 +228,7 @@ public abstract class Controller {
         if (!m_started || m_done) return;
         // Set the current controller of every controlled subsystem to null.
         for (BetterSubsystem subsystem : getRequirements()) {
-            subsystem.setCurrentController(null, null);
+            subsystem.setCurrentController(null);
         }
         // Unpause any controllers this controller paused when it was started.
         for (Controller pausedController : m_pausedControllers) {
@@ -253,7 +241,7 @@ public abstract class Controller {
                 // as the subsystem's current controller.
                 for (BetterSubsystem subsystem : getRequirements()) {
                     if (pausedController.getRequirements().contains(subsystem)) {
-                        subsystem.setCurrentController(null, pausedController);
+                        subsystem.setCurrentController(pausedController);
                     }
                 }
                 pausedController.resume();

@@ -3,8 +3,7 @@ package edu.boscotech.techlib.subsystems;
 import java.util.List;
 
 import edu.boscotech.techlib.configparser.ConfigElement;
-import edu.boscotech.techlib.controllers.Controller;
-import edu.boscotech.techlib.controllers.Controller.ControllerDelegate;
+import edu.boscotech.techlib.subsystems.Controller;
 import edu.boscotech.techlib.hardware.Component;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -74,8 +73,7 @@ public abstract class BetterSubsystem implements Sendable {
         periodic();
     }
 
-    public final void setCurrentController(ControllerDelegate delegate, Controller controller) {
-        delegate.check();
+    protected final void setCurrentController(Controller controller) {
         m_currentController = controller;
     }
 
