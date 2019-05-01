@@ -1,17 +1,22 @@
 package edu.boscotech.techlib.hardware;
 
+import edu.boscotech.techlib.TechlibRobot;
+import edu.boscotech.techlib.configparser.AbstractConfiggable;
 import edu.boscotech.techlib.configparser.ConfigElement;
+import edu.boscotech.techlib.configparser.IConfiggable;
+import edu.boscotech.techlib.validator.IElementValidator;
+import edu.boscotech.techlib.validator.ObjectValidator;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
-public abstract class Component implements Sendable {
+@AbstractConfiggable
+public abstract class Component implements IConfiggable, Sendable {
     private SendableBuilder mNetworkData;
     private String mSmartDashboardTypeName, mName, mSubsystem;
 
     protected Component(String smartDashboardTypeName) {
         mSmartDashboardTypeName = smartDashboardTypeName;
-        LiveWindow.add(this);
     }
 
     /**
@@ -20,7 +25,15 @@ public abstract class Component implements Sendable {
      * @param configTree The configuration for this component, read from the
      *                   robot's configuration file.
      */
-    protected abstract void setup(ConfigElement configTree);
+    protected abstract void setup(TechlibRobot robot, ConfigElement configTree);
+
+    /**
+     * Creates an instance of a class which implements IElementValidator. The
+     * returned validator should be used to verify the syntax of a 
+     * {@link ConfigElement} describing this component.
+     * @return
+     */
+    protected abstract ObjectValidator createValidator();
 
     /**
      * Called regularly while the component is active. Use this to implement any
@@ -44,11 +57,21 @@ public abstract class Component implements Sendable {
      */
     protected abstract void addNetworkData(SendableBuilder builder);
 
-    public final void setupWrapper(ConfigElement configTree) {
+    @Override
+    public final void setupWrapper(TechlibRobot robot, 
+        ConfigElement configTree) {
         mName = configTree.getStringOrDefault(
             configTree.getName(), "name"
         );
-        setup(configTree);
+        LiveWindow.add(this);
+        setup(robot, configTree);
+    }
+
+    @Override
+    public IElementValidator createValidatorWrapper() {
+        ObjectValidator validator = createValidator();
+        validator.addOptionalField("name", null);
+        return validator;
     }
 
     public final void periodicWrapper() {
