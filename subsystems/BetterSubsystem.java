@@ -2,14 +2,20 @@ package edu.boscotech.techlib.subsystems;
 
 import java.util.List;
 
+import edu.boscotech.techlib.TechlibRobot;
+import edu.boscotech.techlib.configparser.AbstractConfiggable;
 import edu.boscotech.techlib.configparser.ConfigElement;
+import edu.boscotech.techlib.configparser.IConfiggable;
 import edu.boscotech.techlib.subsystems.Controller;
+import edu.boscotech.techlib.validator.IElementValidator;
+import edu.boscotech.techlib.validator.ObjectValidator;
 import edu.boscotech.techlib.hardware.Component;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
-public abstract class BetterSubsystem implements Sendable {
+@AbstractConfiggable
+public abstract class BetterSubsystem implements IConfiggable, Sendable {
     private SendableBuilder mNetworkData;
     private String mSmartDashboardTypeName, mName;
     private List<Component> mComponents;
@@ -31,7 +37,9 @@ public abstract class BetterSubsystem implements Sendable {
      * passed in as an argument.
      * @param configTree The configuration data read from the robot's config file.
      */
-    protected abstract void setup(ConfigElement configTree);
+    protected abstract void setup(TechlibRobot robot, ConfigElement configTree);
+
+    protected abstract ObjectValidator createValidator();
 
     /**
      * Called periodically while this subsystem is active. Override this method
@@ -58,12 +66,21 @@ public abstract class BetterSubsystem implements Sendable {
         mComponents.add(childComponent);
     }
 
-    public final void setupWrapper(ConfigElement configTree) {
+    @Override
+    public final void setupWrapper(TechlibRobot robot, 
+        ConfigElement configTree) {
         mName = configTree.getStringOrDefault(
             configTree.getName(), "name"
         );
         mNetworkData.setSmartDashboardType(mSmartDashboardTypeName);
-        setup(configTree);
+        setup(robot, configTree);
+    }
+
+    @Override
+    public IElementValidator createValidatorWrapper() {
+        ObjectValidator validator = createValidator();
+        validator.addOptionalField("name", null);
+        return validator;
     }
 
     public final void periodicWrapper() {
