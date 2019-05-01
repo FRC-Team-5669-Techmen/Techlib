@@ -68,6 +68,10 @@ public class ConfigElement {
         return getPath(path).asNumber();
     }
 
+    public boolean getBoolean(String... path) {
+        return getPath(path).asBoolean();
+    }
+
     public String getStringOrDefault(String defaultValue, String... path) {
         ConfigElement element = getPath(path);
         return element == null ? defaultValue : element.asString();
@@ -78,12 +82,21 @@ public class ConfigElement {
         return element == null ? defaultValue : element.asNumber();
     }
 
+    public boolean getBooleanOrDefault(boolean defaultValue, String... path) {
+        ConfigElement element = getPath(path);
+        return element == null ? defaultValue : element.asBoolean();
+    }
+
     public String asString() {
         return mValue;
     }
 
     public double asNumber() {
         return Double.parseDouble(mValue);
+    }
+
+    public boolean asBoolean() {
+        return mValue == "true";
     }
 
     public String toString() {
