@@ -1,5 +1,7 @@
 package edu.boscotech.techlib.validator;
 
+import java.util.List;
+
 import edu.boscotech.techlib.configparser.ConfigElement;
 
 public class CompoundValidator implements IElementValidator {
@@ -7,6 +9,13 @@ public class CompoundValidator implements IElementValidator {
 
     public CompoundValidator(IElementValidator... validators) {
         mChildren = validators;
+    }
+
+    public CompoundValidator(List<IElementValidator> validators) {
+        mChildren = new IElementValidator[validators.size()];
+        for (int i = 0; i < validators.size(); i++) {
+            mChildren[i] = validators.get(i);
+        }
     }
 
     @Override
